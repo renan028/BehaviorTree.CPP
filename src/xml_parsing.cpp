@@ -311,7 +311,11 @@ void VerifyXML(const std::string& xml_text,
         }
         else if (StrEqual(name, "Sequence") ||
                  StrEqual(name, "SequenceStar") ||
-                 StrEqual(name, "Fallback") )
+                 StrEqual(name, "Fallback") ||
+                 StrEqual(name, "QueueNode") ||
+                 StrEqual(name, "ReactiveSequence") ||
+                 StrEqual(name, "ReactiveFallback") ||
+                 StrEqual(name, "Parallel"))
         {
             if (children_count == 0)
             {
