@@ -15,6 +15,7 @@ set(BT_TESTS
   gtest_blackboard.cpp
   navigation_test.cpp
   gtest_subtree.cpp
+  gtest_queue.cpp
 )
 
 if (NOT MINGW)
