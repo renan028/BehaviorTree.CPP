@@ -20,6 +20,13 @@ target_link_libraries(t02_basic_ports ${BEHAVIOR_TREE_LIBRARY} bt_sample_nodes )
 add_executable(t03_generic_ports        t03_generic_ports.cpp )
 target_link_libraries(t03_generic_ports ${BEHAVIOR_TREE_LIBRARY}  bt_sample_nodes  )
 
+find_package (Eigen3 3.3 NO_MODULE)
+if (TARGET Eigen3::Eigen)
+    add_executable(t03_generic_ports_2        t03_generic_ports_2.cpp )
+    target_link_libraries(t03_generic_ports_2 ${BEHAVIOR_TREE_LIBRARY}  bt_sample_nodes  )
+    target_link_libraries(t03_generic_ports_2 Eigen3::Eigen)
+endif (TARGET Eigen3::Eigen)
+
 add_executable(t04_reactive_sequence         t04_reactive_sequence.cpp )
 target_link_libraries(t04_reactive_sequence  ${BEHAVIOR_TREE_LIBRARY} bt_sample_nodes  )
 
