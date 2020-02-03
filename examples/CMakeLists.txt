@@ -38,6 +38,9 @@ target_link_libraries(t08_additional_node_args   ${BEHAVIOR_TREE_LIBRARY} )
 if (NOT MINGW)
     add_executable(t09_async_actions_coroutines  t09_async_actions_coroutines.cpp )
     target_link_libraries(t09_async_actions_coroutines ${BEHAVIOR_TREE_LIBRARY} )
+
+    add_executable(t09_async_actions_coroutines_2  t09_async_actions_coroutines_2.cpp )
+    target_link_libraries(t09_async_actions_coroutines_2 ${BEHAVIOR_TREE_LIBRARY} )
 endif()
 
 add_executable(t10_include_trees  t10_include_trees.cpp )
