@@ -1,5 +1,8 @@
-#include "behaviortree_cpp_v3/bt_factory.h"
 #include <map>
+
+#include "behaviortree_cpp_v3/bt_factory.h"
+#include "behaviortree_cpp_v3/loggers/bt_file_logger.h"
+#include "behaviortree_cpp_v3/loggers/bt_minitrace_logger.h"
 
 using namespace BT;
 
@@ -159,6 +162,11 @@ int main()
                 blackboard->getInput<int>("value", fast_reply);
         }
     }
+
+    FileLogger logger_file(tree, "bt_trace.fbl");
+    MinitraceLogger logger_minitrace(tree, "bt_trace.json");
+
+    printTreeRecursively(tree.root_node);
 
     //----------------------
     // No Timeout
