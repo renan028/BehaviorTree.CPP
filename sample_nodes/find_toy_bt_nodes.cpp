@@ -33,7 +33,7 @@ BT::NodeStatus RetrieveToyRoom::tick()
         toy_rooms_.pop();
     }
     
-    else if (msg.value() == "false")
+    else if (msg.value() == toy_rooms_.front())
     {
         toy_rooms_.pop();
         
@@ -62,8 +62,6 @@ BT::NodeStatus GotoRoom::tick()
     {
         std::cout << "Robot arrives at room " << msg.value() << "\n";
     }
-    else
-        std::cout << "Something is wrong with this GotoRoom\n";
     return BT::NodeStatus::SUCCESS;
 }
 
@@ -86,45 +84,27 @@ InspectRoomToy::InspectRoomToy(const std::string& name,
     BT::SyncActionNode(name, config)
 {}
 
-void InspectRoomToy::init(const std::string& room_with_toy)
-{
-    rooms_with_toy_ = room_with_toy;
-}
-
 BT::NodeStatus InspectRoomToy::tick()
 {
     SleepMS(500);
-    Optional<std::string> msg = getInput<std::string>("toy_type");
-    if (!msg)
+    Optional<std::string> msg = getInput<std::string>("room");
+    if (msg)
     {
-        throw BT::RuntimeError("missing required input [message]: ", 
-                                   msg.error() );
-    }
-        
-    if (msg.value() == rooms_with_toy_)
-    {
-        setOutput("toy_pose", "1;2");
-        return BT::NodeStatus::SUCCESS;
-    }
-    else 
-    {
-        setOutput("toy_pose", "-1;-1");
+        std::cout << "Robot inspects room " << msg.value() << "\n";
+        if ("kitchen" == msg.value())
+        {
+            setOutput("toy_pose", "1;2");
+            return BT::NodeStatus::SUCCESS;
+        }
+        setOutput("found", msg.value());
         return BT::NodeStatus::FAILURE;
     }
-}
-
-//----------------------------------------------------
-// ToyFound
-ToyFound::ToyFound(const std::string& name, 
-        const BT::NodeConfiguration& config) : 
-    BT::ConditionNode(name, config)
-{}
-
-BT::NodeStatus ToyFound::tick()
-{
-    SleepMS(200);
-    setOutput("toy_found", "false");
-    return BT::NodeStatus::FAILURE;
+    else
+    {
+        std::cout << "Something goes odd in InspectRoom\n";
+        return BT::NodeStatus::FAILURE;
+    }
+    
 }
 
 //----------------------------------------------------
@@ -142,7 +122,6 @@ void FindToyBT::RegisterNodes(BehaviorTreeFactory& factory)
     factory.registerNodeType<FindToyBT::GotoRoom>("GotoRoom");
     factory.registerNodeType<FindToyBT::EnterRoom>("EnterRoom");
     factory.registerNodeType<FindToyBT::InspectRoomToy>("InspectRoomToy");
-    factory.registerNodeType<FindToyBT::ToyFound>("ToyFound");
     factory.registerSimpleCondition("ToyInSight", std::bind(ToyInSight));
 }
 

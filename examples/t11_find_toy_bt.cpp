@@ -18,14 +18,6 @@ int main(int argc, char** argv)
 
     auto tree = factory.createTreeFromFile(argv[1]);
 
-    for( auto& node: tree.nodes )
-    {
-        if( auto inspect = dynamic_cast<FindToyBT::InspectRoomToy*>(node.get()))
-        {
-            inspect->init("beedrom");
-        }
-    }
-
     FileLogger logger_file(tree, "bt_trace_t11.fbl");
 
     while( tree.root_node->executeTick() == NodeStatus::RUNNING)

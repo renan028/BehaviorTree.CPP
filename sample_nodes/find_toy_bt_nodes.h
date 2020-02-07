@@ -62,26 +62,9 @@ class InspectRoomToy : public BT::SyncActionNode
         static BT::PortsList providedPorts()
         {
             return { BT::OutputPort<std::string>("toy_pose"), 
-                BT::InputPort<std::string>("toy_type") };
-        }
-
-        void init(const std::string& room_with_toy);
-    
-    private:
-        std::string rooms_with_toy_;
-};
-
-class ToyFound : public BT::ConditionNode
-{
-    public:
-        ToyFound(const std::string& name, 
-            const BT::NodeConfiguration& config);
-        
-        BT::NodeStatus tick() override;
-
-        static BT::PortsList providedPorts()
-        {
-            return {BT::OutputPort<std::string>("toy_found_result")};
+                BT::InputPort<std::string>("toy_type"),
+                BT::InputPort<std::string>("found"),
+                BT::InputPort<std::string>("room") };
         }
 };
 
