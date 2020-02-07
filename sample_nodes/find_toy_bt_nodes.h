@@ -27,6 +27,8 @@ class RetrieveToyRoom : public BT::SyncActionNode
     private:
         std::queue<std::string> toy_rooms_;
         bool first_tick = true;
+
+        void print(std::queue<std::string> q);
 };
 
 class GotoRoom : public BT::SyncActionNode
@@ -63,7 +65,7 @@ class InspectRoomToy : public BT::SyncActionNode
         {
             return { BT::OutputPort<std::string>("toy_pose"), 
                 BT::InputPort<std::string>("toy_type"),
-                BT::InputPort<std::string>("found"),
+                BT::OutputPort<std::string>("found"),
                 BT::InputPort<std::string>("room") };
         }
 };

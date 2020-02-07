@@ -26,7 +26,7 @@ BT::NodeStatus RetrieveToyRoom::tick()
         first_tick = false;
     }
 
-    else if (!msg && !first_tick)
+    else if ((!msg && !first_tick) || (msg.value() != toy_rooms_.front()))
     {
         auto last_room = toy_rooms_.front();    
         toy_rooms_.push(last_room);
@@ -42,10 +42,21 @@ BT::NodeStatus RetrieveToyRoom::tick()
             return BT::NodeStatus::FAILURE;
         }
     }
-        
+    print(toy_rooms_);
     auto room = toy_rooms_.front();
     setOutput("retrieve_room", room);
     return BT::NodeStatus::SUCCESS;
+}
+
+void RetrieveToyRoom::print(std::queue<std::string> q)
+{
+    std::cout << "Available rooms: ";
+    while (!q.empty())
+    {
+        std::cout << q.front() << ", ";
+        q.pop();
+    }
+    std::cout << std::endl;
 }
 
 //----------------------------------------------------
@@ -60,7 +71,12 @@ BT::NodeStatus GotoRoom::tick()
     Optional<std::string> msg = getInput<std::string>("room");
     if (msg)
     {
-        std::cout << "Robot arrives at room " << msg.value() << "\n";
+        std::cout << "Robot arrives at " << msg.value() << "\n";
+        if (msg.value() == "hall")
+        {
+            std::cout << "A person is blocking the Hall, Goto fails." << "\n";
+            return BT::NodeStatus::FAILURE;    
+        }
     }
     return BT::NodeStatus::SUCCESS;
 }
@@ -90,9 +106,10 @@ BT::NodeStatus InspectRoomToy::tick()
     Optional<std::string> msg = getInput<std::string>("room");
     if (msg)
     {
-        std::cout << "Robot inspects room " << msg.value() << "\n";
+        std::cout << "Robot inspects " << msg.value() << "\n";
         if ("kitchen" == msg.value())
         {
+            std::cout << "Toy found in " << msg.value() << "\n";
             setOutput("toy_pose", "1;2");
             return BT::NodeStatus::SUCCESS;
         }
@@ -111,7 +128,7 @@ BT::NodeStatus InspectRoomToy::tick()
 // ToyInSight
 BT::NodeStatus ToyInSight()
 {
-    return BT::NodeStatus::FAILURE;
+    return BT::NodeStatus::SUCCESS;
 }
 
 } //namespace FindToyBT
