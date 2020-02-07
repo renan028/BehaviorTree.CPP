@@ -6,9 +6,9 @@
             <RetryUntilSuccesful num_attempts="-1">
                 <Fallback>
                     <Inverter>
-                        <Action ID="RetrieveToyRoom" room="bedroom" toy_found="{toy_found_result}"/>
+                        <Action ID="RetrieveToyRoom" toy_found="{result}" retrieve_room="bedroom" />
                     </Inverter>
-                    <SubTree ID="SearchToyBT" output="toy_found_result" target="{room}"/>
+                    <SubTree ID="SearchToyBT" toy_found_result="result" room_to_go="retrieve_room" />
                 </Fallback>
             </RetryUntilSuccesful>
             <Condition ID="ToyInSight"/>
@@ -17,11 +17,11 @@
     <!-- ////////// -->
     <BehaviorTree ID="SearchToyBT">
         <Sequence name="SearchToy">
-            <Action ID="GotoRoom" room="{target}"/>
+            <Action ID="GotoRoom" room="{room_to_go}"/>
             <Action ID="EnterRoom"/>
             <Action ID="InspectRoomToy" toy_pose="0;0" toy_type="ball"/>
             <SetBlackboard output_key="toy_pose" value="{toy_pose}"/>
-            <Condition ID="ToyFound" toy_found="false"/>
+            <Condition ID="ToyFound" toy_found_result="false"/>
         </Sequence>
     </BehaviorTree>
     <!-- ////////// -->

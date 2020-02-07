@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 
     while( tree.root_node->executeTick() == NodeStatus::RUNNING)
     {
-        std::this_thread::sleep_for( std::chrono::milliseconds(10) );
+        std::this_thread::sleep_for( std::chrono::milliseconds(1) );
     }
 
     return 0;

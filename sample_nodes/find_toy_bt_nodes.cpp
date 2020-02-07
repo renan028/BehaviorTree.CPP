@@ -14,31 +14,37 @@ RetrieveToyRoom::RetrieveToyRoom(const std::string& name,
 
 BT::NodeStatus RetrieveToyRoom::tick()
 {
-    SleepMS(100);
-    Optional<std::string> msg = getInput<std::string>("toy_found");
-    if (!msg)
+    // Sanity check (map without rooms)
+    if (toy_rooms_.empty())
     {
-        throw BT::RuntimeError("missing required input [message]: ", 
-                                msg.error() );
+        return BT::NodeStatus::FAILURE;
     }
     
-    if (msg.value() == "false")
-        toy_rooms_.pop();
-    else if (msg.value() == "true")
-        return BT::NodeStatus::SUCCESS;
-    else // put it back to end
+    Optional<std::string> msg = getInput<std::string>("toy_found");
+    if (!msg && first_tick)
+    {
+        first_tick = false;
+    }
+
+    else if (!msg && !first_tick)
     {
         auto last_room = toy_rooms_.front();    
         toy_rooms_.push(last_room);
         toy_rooms_.pop();
     }
-
-    if (toy_rooms_.empty())
-        return BT::NodeStatus::FAILURE;
-
+    
+    else if (msg.value() == "false")
+    {
+        toy_rooms_.pop();
+        
+        if (toy_rooms_.empty())
+        {
+            return BT::NodeStatus::FAILURE;
+        }
+    }
+        
     auto room = toy_rooms_.front();
-
-    setOutput("room", room);
+    setOutput("retrieve_room", room);
     return BT::NodeStatus::SUCCESS;
 }
 
@@ -50,7 +56,14 @@ GotoRoom::GotoRoom(const std::string& name,
         
 BT::NodeStatus GotoRoom::tick()
 {
-    SleepMS(500);
+    SleepMS(10);
+    Optional<std::string> msg = getInput<std::string>("room");
+    if (msg)
+    {
+        std::cout << "Robot arrives at room " << msg.value() << "\n";
+    }
+    else
+        std::cout << "Something is wrong with this GotoRoom\n";
     return BT::NodeStatus::SUCCESS;
 }
 
@@ -81,7 +94,7 @@ void InspectRoomToy::init(const std::string& room_with_toy)
 BT::NodeStatus InspectRoomToy::tick()
 {
     SleepMS(500);
-    Optional<std::string> msg = getInput<std::string>("toy_found");
+    Optional<std::string> msg = getInput<std::string>("toy_type");
     if (!msg)
     {
         throw BT::RuntimeError("missing required input [message]: ", 

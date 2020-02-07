@@ -20,12 +20,13 @@ class RetrieveToyRoom : public BT::SyncActionNode
 
         static BT::PortsList providedPorts()
         {
-            return { BT::OutputPort<std::string>("room"), 
+            return { BT::OutputPort<std::string>("retrieve_room"), 
                 BT::InputPort<std::string>("toy_found") };
         }
     
     private:
         std::queue<std::string> toy_rooms_;
+        bool first_tick = true;
 };
 
 class GotoRoom : public BT::SyncActionNode
@@ -80,7 +81,7 @@ class ToyFound : public BT::ConditionNode
 
         static BT::PortsList providedPorts()
         {
-            return {BT::OutputPort<std::string>("toy_found")};
+            return {BT::OutputPort<std::string>("toy_found_result")};
         }
 };
 
