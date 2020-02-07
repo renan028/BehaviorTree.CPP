@@ -45,3 +45,6 @@ endif()
 
 add_executable(t10_include_trees  t10_include_trees.cpp )
 target_link_libraries(t10_include_trees  ${BEHAVIOR_TREE_LIBRARY} bt_sample_nodes )
+
+add_executable(t11_find_toy_bt  t11_find_toy_bt.cpp )
+target_link_libraries(t11_find_toy_bt  ${BEHAVIOR_TREE_LIBRARY} bt_sample_nodes)

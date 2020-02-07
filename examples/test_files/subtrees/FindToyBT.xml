@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="FindToyBT">
+    <!-- ////////// -->
+    <BehaviorTree ID="FindToyBT">
+        <Sequence>
+            <RetryUntilSuccesful num_attempts="-1">
+                <Fallback>
+                    <Inverter>
+                        <Action ID="RetrieveToyRoom" room="bedroom" toy_found="{toy_found_result}"/>
+                    </Inverter>
+                    <SubTree ID="SearchToyBT" output="toy_found_result" target="{room}"/>
+                </Fallback>
+            </RetryUntilSuccesful>
+            <Condition ID="ToyInSight"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <BehaviorTree ID="SearchToyBT">
+        <Sequence name="SearchToy">
+            <Action ID="GotoRoom" room="{target}"/>
+            <Action ID="EnterRoom"/>
+            <Action ID="InspectRoomToy" toy_pose="0;0" toy_type="ball"/>
+            <SetBlackboard output_key="toy_pose" value="{toy_pose}"/>
+            <Condition ID="ToyFound" toy_found="false"/>
+        </Sequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+</root>
+
