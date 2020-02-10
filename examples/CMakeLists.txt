@@ -48,3 +48,6 @@ target_link_libraries(t10_include_trees  ${BEHAVIOR_TREE_LIBRARY} bt_sample_node
 
 add_executable(t11_find_toy_bt  t11_find_toy_bt.cpp )
 target_link_libraries(t11_find_toy_bt  ${BEHAVIOR_TREE_LIBRARY} bt_sample_nodes)
+
+add_executable(t11_runtime_ports  t11_runtime_ports.cpp )
+target_link_libraries(t11_runtime_ports  ${BEHAVIOR_TREE_LIBRARY} bt_sample_nodes )
