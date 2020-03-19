@@ -98,10 +98,44 @@ NodeStatus SwitchNode<NUM_CASES>::tick()
         }
     }
 
-    // if another one was running earlier, halt it
-    if( running_child_ != -1 && running_child_ != child_index)
+    // if a child was already running earlier
+    if( running_child_ != -1)
     {
-        haltChild(running_child_);
+        switch (children_nodes_[running_child_]->status())
+        {
+            // check if the child finished in failure
+            case NodeStatus::FAILURE:
+            {
+                haltChild(running_child_);
+                running_child_ = -1;
+                return NodeStatus::FAILURE;
+            }
+            break;
+
+            // check if the child finished in success
+            case NodeStatus::SUCCESS:
+            {
+                haltChild(running_child_);
+                running_child_ = -1;
+                return NodeStatus::SUCCESS;
+            }
+            break;
+
+            // check if the child is still running 
+            case NodeStatus::RUNNING:
+            {
+                // and halt it if it is not the new requested child
+                if(running_child_ != child_index)
+                    haltChild(running_child_);
+            }
+            break;
+
+            case NodeStatus::IDLE:
+            {
+                throw LogicError("A child node must never return IDLE");
+            }
+            break;
+        } //end switch
     }
 
     auto& selected_child = children_nodes_[child_index];
